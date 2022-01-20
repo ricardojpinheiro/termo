@@ -1,5 +1,5 @@
 {
-   geralist.pas
+   termo.pas
    
    Copyright 2022 Ricardo Jurczyk Pinheiro <ricardojpinheiro@gmail.com>
    
@@ -21,41 +21,35 @@
    
 }
 
-program geralist;
-
+program termo;
 type
 	wordlist = string[5];
 
 var
-	arquivo_entrada: text;
-	arquivo_saida: file of wordlist;
-	nome_arquivo_entrada, nome_arquivo_saida: string[80];
+	arquivo_entrada: file of wordlist;
+	nome_arquivo_entrada: string[80];
 	palavra: wordlist;
+	tamanho_arquivo, aleatorio: integer;
 
 BEGIN
-	if paramcount <> 2 then
-	begin
-		writeln ('geralist <arquivo de entrada> <arquivo de saida>');
-		writeln ('Gera a lista de entradas para uso do wordle/termo');
-		exit;
-	end;
+	nome_arquivo_entrada := 'd:pt_word.lst';
+	aleatorio := 0;
 	
-	nome_arquivo_entrada 	:= paramstr(1);
-	nome_arquivo_saida 		:= paramstr(2);
-	
+	clrscr;
+	randomize;
 	assign (arquivo_entrada, nome_arquivo_entrada);
-	assign (arquivo_saida, 	nome_arquivo_saida);
 	{$i-}
 	reset (arquivo_entrada);
-	rewrite (arquivo_saida);
 	{$i+}
-	while not eof(arquivo_entrada) do
-	begin
-		fillchar(palavra, sizeof(palavra), chr(32));
-		readln(arquivo_entrada, palavra);
-		write(arquivo_saida, palavra);
-	end;
-	close(arquivo_saida);
+
+	tamanho_arquivo := filesize(arquivo_entrada);
+	aleatorio := round(int(random(tamanho_arquivo)));
+
+	fillchar(palavra, sizeof(palavra), chr(32));
+	seek(arquivo_entrada, aleatorio);
+	read(arquivo_entrada, palavra);
+	writeln(aleatorio , ' ' , palavra);
+
 	close(arquivo_entrada);
 END.
 
