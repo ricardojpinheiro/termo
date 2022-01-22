@@ -24,32 +24,86 @@
 program termo;
 type
 	wordlist = string[5];
+	registerwordlist	= record
+		nome: wordlist;
+	end;
 
 var
-	arquivo_entrada: file of wordlist;
+	arquivo_entrada: file of registerwordlist;
 	nome_arquivo_entrada: string[80];
 	palavra: wordlist;
-	tamanho_arquivo, aleatorio: integer;
+	registropalavra: registerwordlist;
+	tamanho_arquivo, aleatorio, i, j: integer;
+	resposta_certa: boolean;
 
-BEGIN
-	nome_arquivo_entrada := 'd:pt_word.lst';
+procedure inicializacao;
+begin
+	nome_arquivo_entrada := 'pt_word.lst';
 	aleatorio := 0;
-	
-	clrscr;
+
 	randomize;
+end;
+
+procedure abre_arquivo;
+begin
 	assign (arquivo_entrada, nome_arquivo_entrada);
 	{$i-}
 	reset (arquivo_entrada);
 	{$i+}
+end;
 
+procedure sorteio;
+begin
 	tamanho_arquivo := filesize(arquivo_entrada);
 	aleatorio := round(int(random(tamanho_arquivo)));
+end;
 
-	fillchar(palavra, sizeof(palavra), chr(32));
+procedure busca_da_palavra;
+begin
 	seek(arquivo_entrada, aleatorio);
-	read(arquivo_entrada, palavra);
-	writeln(aleatorio , ' ' , palavra);
+	read(arquivo_entrada, registropalavra);
+end;
 
+procedure forca;
+begin
+	i := 1;
+	resposta_certa := false;
+
+	with registropalavra do
+		while (i <= 6) or (resposta_certa = false) do
+		begin
+			writeln(i, 'a tentativa: ');
+			fillchar(palavra, sizeof(palavra), chr(32));
+			read(palavra);
+			if nome <> palavra then
+				for j := 1 to 5 do
+					if nome[j] = palavra[j] then
+						write(palavra[j])
+					else
+						write('?')
+			else
+				resposta_certa := true;
+			writeln;
+			i := i + 1;
+		end;
+end;
+
+procedure fecha_arquivo;
+begin
 	close(arquivo_entrada);
+end;
+
+BEGIN
+	inicializacao;
+	abre_arquivo;
+	sorteio;
+	busca_da_palavra;
+
+	writeln('Aleatorio: ', aleatorio);
+	writeln('Tamanho do arquivo: ', tamanho_arquivo);
+	writeln('Palavra: ', registropalavra.nome);
+
+	forca;
+	fecha_arquivo;
 END.
 

@@ -22,15 +22,18 @@
 }
 
 program geralist;
-
 type
 	wordlist = string[5];
+	registerwordlist	= record
+		nome: wordlist;
+	end;
 
 var
 	arquivo_entrada: text;
-	arquivo_saida: file of wordlist;
+	arquivo_saida: file of registerwordlist;
 	nome_arquivo_entrada, nome_arquivo_saida: string[80];
 	palavra: wordlist;
+	registropalavra: registerwordlist;
 
 BEGIN
 	if paramcount <> 2 then
@@ -53,7 +56,8 @@ BEGIN
 	begin
 		fillchar(palavra, sizeof(palavra), chr(32));
 		readln(arquivo_entrada, palavra);
-		write(arquivo_saida, palavra);
+		registropalavra.nome := palavra;
+		write(arquivo_saida, registropalavra);
 	end;
 	close(arquivo_saida);
 	close(arquivo_entrada);
