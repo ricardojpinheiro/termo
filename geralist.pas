@@ -23,43 +23,43 @@
 
 program geralist;
 type
-	wordlist = string[5];
-	registerwordlist	= record
-		nome: wordlist;
-	end;
+    wordlist = string[5];
+    registerwordlist    = record
+        nome: wordlist;
+    end;
 
 var
-	arquivo_entrada: text;
-	arquivo_saida: file of registerwordlist;
-	nome_arquivo_entrada, nome_arquivo_saida: string[80];
-	palavra: wordlist;
-	registropalavra: registerwordlist;
+    arquivo_entrada: text;
+    arquivo_saida: file of registerwordlist;
+    nome_arquivo_entrada, nome_arquivo_saida: string[80];
+    palavra: wordlist;
+    registropalavra: registerwordlist;
 
 BEGIN
-	if paramcount <> 2 then
-	begin
-		writeln ('geralist <arquivo de entrada> <arquivo de saida>');
-		writeln ('Gera a lista de entradas para uso do wordle/termo');
-		exit;
-	end;
-	
-	nome_arquivo_entrada 	:= paramstr(1);
-	nome_arquivo_saida 		:= paramstr(2);
-	
-	assign (arquivo_entrada, nome_arquivo_entrada);
-	assign (arquivo_saida, 	nome_arquivo_saida);
-	{$i-}
-	reset (arquivo_entrada);
-	rewrite (arquivo_saida);
-	{$i+}
-	while not eof(arquivo_entrada) do
-	begin
-		fillchar(palavra, sizeof(palavra), chr(32));
-		readln(arquivo_entrada, palavra);
-		registropalavra.nome := palavra;
-		write(arquivo_saida, registropalavra);
-	end;
-	close(arquivo_saida);
-	close(arquivo_entrada);
+    if paramcount <> 2 then
+    begin
+        writeln ('geralist <arquivo de entrada> <arquivo de saida>');
+        writeln ('Gera a lista de entradas para uso do wordle/termo');
+        exit;
+    end;
+    
+    nome_arquivo_entrada    := paramstr(1);
+    nome_arquivo_saida      := paramstr(2);
+    
+    assign (arquivo_entrada, nome_arquivo_entrada);
+    assign (arquivo_saida,  nome_arquivo_saida);
+    {$i-}
+    reset (arquivo_entrada);
+    rewrite (arquivo_saida);
+    {$i+}
+    while not eof(arquivo_entrada) do
+    begin
+        fillchar(palavra, sizeof(palavra), chr(32));
+        readln(arquivo_entrada, palavra);
+        registropalavra.nome := palavra;
+        write(arquivo_saida, registropalavra);
+    end;
+    close(arquivo_saida);
+    close(arquivo_entrada);
 END.
 
